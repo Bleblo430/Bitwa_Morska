@@ -68,7 +68,7 @@ def get_idx(text):
             i = 0
             j = 0
             print("wiadomość musi być w formacie litera liczba np. D6")
-    return [i,j]
+    return (i,j)
 
 def setShip(startXY, endXY):
     if(True): return True
@@ -222,5 +222,3 @@ def prepGame():
         print(board)
     return board
 
-newGame()
-prepGame()
