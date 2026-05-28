@@ -1,11 +1,28 @@
+#-*- coding: utf-8 -*-
+
 import numpy as np
+
+# cprint("■", "red", end="")
+# cprint("■", "red", end="")
+# cprint("■", "cyan", end="")
+# cprint("■", "cyan", end="")
+# cprint("■", "cyan", end="")
+# cprint("■", "red", end="")
+# cprint("■", "green", end="")
+# cprint("■", "green", end="")
+# cprint("■", "cyan", end="")
+# cprint("■", "cyan", end="")
+# #cprint(" ", "red", "on_gray", end="")
+
+
+
 def newGame():
     #tą funkcje pisze sobie na przyszlosc zeby pamietac co trzeba zrobic przy nowej grze
     global prepDone, board, shipsLeft, shipsSet
 
     board = np.array([[None for j in range(11)] for i in range(11)])
-    board[0,] = [None, "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"] #inicjalizuje tablice z plansza formatu 10x10 A1 to [0,0] --- pole 0 - puste; pole 1 - statek nietrafiony; pole 2 - spudlowane; pole 3 - statek trafiony; pole 4 - statek wlasnie stawiany
-    board[:,0] = [None, "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"] #inicjalizuje tablice z plansza formatu 10x10 A1 to [0,0] --- pole 0 - puste; pole 1 - statek nietrafiony; pole 2 - spudlowane; pole 3 - statek trafiony; pole 4 - statek wlasnie stawiany
+    board[0,] = [" ", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J"] #inicjalizuje tablice z plansza formatu 10x10 A1 to [0,0] --- pole 0 - puste; pole 1 - statek nietrafiony; pole 2 - spudlowane; pole 3 - statek trafiony; pole 4 - statek wlasnie stawiany
+    board[:,0] = ["  ", " 1", " 2", " 3", " 4", " 5", " 6", " 7", " 8", " 9", "10"] #inicjalizuje tablice z plansza formatu 10x10 A1 to [0,0] --- pole 0 - puste; pole 1 - statek nietrafiony; pole 2 - spudlowane; pole 3 - statek trafiony; pole 4 - statek wlasnie stawiany
     board[1:,1:] = 0 #ustawiam pola od [1,1] do [10,10] na 0, czyli puste
     
     prepDone = bool(False)
@@ -68,7 +85,7 @@ def get_idx(text):
             i = 0
             j = 0
             print("wiadomość musi być w formacie litera liczba np. D6")
-    return [i,j]
+    return (i,j)
 
 def setShip(startXY, endXY):
     if(True): return True
@@ -219,8 +236,9 @@ def prepGame():
             if(shipsLeft == [0,0,0,0]): prepDone = True
         except BreakLoop:
             pass
-        print(board)
-
+        #print(board)
+        printBoard(board)
+    return board
 
 newGame()
 prepGame()
