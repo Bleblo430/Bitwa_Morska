@@ -4,7 +4,10 @@ import numpy as np
 import json
 from printBoard import printBoard
 
-
+######
+#potrzebne biblioteki:
+#numpy
+#termcolor
 GAME_PORT = 5005
 DISCOVERY_PORT = 5006
 
