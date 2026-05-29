@@ -16,16 +16,17 @@ def newGame():
 def get_idx(text):
     text = text.replace(" ", "")
     text = text.lower()
-    tab = letters = ["a","b","c","d","e","f","g","h","i","j"]
+    tab = ["a","b","c","d","e","f","g","h","i","j"]
     letters = list(text)
-    if len(letters) ==0:
+    if len(letters) == 1:
         i = 0
         j = 0
-        print("proszę mnie nie denerwować pustymi frazesami")
+        print("wiadomość za krótka, wiadomość musi być w formacie litera liczba np B3")
     elif len(letters)>3:
         i = 0
         j = 0
         print("wiadomośc za długa, wiadomość musi być w formacie litera liczba np B3")
+
     elif(len(letters)==3):
         if(letters[0].isalpha() and letters[1].isdigit() and letters[2].isdigit()):
             if letters[0] not in tab:
@@ -48,7 +49,12 @@ def get_idx(text):
             j = 0
             print("wiadomość musi być w formacie litera liczba np. D6")
     else:
-        if(letters[0].isalpha() and letters[1].isdigit()):
+        if len(letters)==0:
+            i = 0
+            j = 0
+            print("proszę mnie nie denerwować pustymi frazesami")
+
+        elif(letters[0].isalpha() and letters[1].isdigit()):
             if letters[0] not in tab:
                 i = 0
                 j = 0
@@ -68,6 +74,14 @@ def get_idx(text):
             i = 0
             j = 0
             print("wiadomość musi być w formacie litera liczba np. D6")
+    i = int(i)
+    j = int(j)
+
+    if i < 1 or i > 10 or j < 1 or j > 10:
+        print("pole poza planszą")
+        i = 0
+        j = 0 
+    
     return (i,j)
 
 def setShip(startXY, endXY):
@@ -219,6 +233,8 @@ def prepGame():
             if(shipsLeft == [0,0,0,0]): prepDone = True
         except BreakLoop:
             pass
-        print(board)
+        #print(board)
+
     return board
+
 
