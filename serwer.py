@@ -1,11 +1,30 @@
 import socket 
 import json
+import threading
 
-UDP_IP = ""
-UDP_PORT = 5005
+GAME_PORT = 5005
+DISCOVERY_PORT = 5006
+
+def discovery_server():
+    discovery_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    discovery_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    discovery_sock.bind(("", DISCOVERY_PORT))
+
+    print("Discovery działa")
+
+    while True:
+        data, addr = discovery_sock.recvfrom(1024)
+        msg = data.decode()
+
+        if msg == "FIND_BATTLESHIP_SERVER":
+            discovery_sock.sendto("BATTLESHIP_SERVER_HERE".encode(), addr)
+
+
+threading.Thread(target=discovery_server, daemon=True).start()
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind((UDP_IP, UDP_PORT))
+sock.bind(("", GAME_PORT))
+
 #=^-^=
 #.,.
 

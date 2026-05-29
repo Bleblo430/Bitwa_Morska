@@ -5,10 +5,37 @@ import json
 from printBoard import printBoard
 
 
-UDP_IP = "127.0.0.1"   # IP serwera
-UDP_PORT = 5005
+GAME_PORT = 5005
+DISCOVERY_PORT = 5006
 
-server_addr = (UDP_IP,UDP_PORT)
+def find_server():
+    discovery_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    discovery_sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    discovery_sock.settimeout(3)
+
+    discovery_sock.sendto(
+        "FIND_BATTLESHIP_SERVER".encode(),
+        ("255.255.255.255", DISCOVERY_PORT)
+    )
+
+    try:
+        data, addr = discovery_sock.recvfrom(1024)
+
+        if data.decode() == "BATTLESHIP_SERVER_HERE":
+            return (addr[0], GAME_PORT)
+
+    except socket.timeout:
+        return None
+
+
+server_addr = find_server()
+
+if server_addr is None:
+    print("Nie znaleziono serwera")
+    exit()
+
+print("Znaleziono serwer:", server_addr)
+
 
 ########################
 # okazuje się że główna pętla gry to maszyna stanów
@@ -51,7 +78,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # automatyczny lokalny port klienta
 sock.bind(("", 0))
 
-print("Klient uruchomiony wpisz 'join' żeby dołączyć i 'exit' żeby wyjść")
+print("Klient uruchomiony wpisz 'join' żeby dołączyć i 'exit' żeby wyjść\n")
 
 
 
@@ -98,22 +125,17 @@ while not joined:
         print("niepoprawna wiadomość")
         continue
 
-print("wyjście z pierwszego while")
-print("((przed będzie tworzenie tablicy)) zasady są proste, podajesz pole np A4 i próbujesz trafić statek wroga, powodzenia!!")
+
+print("Zasady są proste, podajesz pole np A4 i próbujesz trafić statek wroga, powodzenia!!\n")
 
 while joined:
-    
-    #trzeba dodać odebranie wiadomości od serwera który mówi czyja jest tura
-    print("jesteś w głównej pętli")
-
-
     ###
     # maszyna stanów
     ###
     while state == "idle":
         
-        print(state)
         
+        print("proszę czekać\n")
         data, addr = sock.recvfrom(1024)
         data = data.decode()
         #od serv_msg będzie zależało w jaki stan przechodzi maszyna
@@ -121,11 +143,11 @@ while joined:
         state = packet["type"]
         if packet["board"] is not None:
             board = packet["board"]
+        
 
 
     
     if state == "waiting":
-        print(state)
         print(packet["message"])
         state = "idle"
     
@@ -151,23 +173,23 @@ while joined:
         if packet["board"] is not None:
             board = packet["board"]
         
-        print("Twoja plansza:")
+        print("Twoja plansza:\n")
         printBoard(board)
 
-        print("Twoja mapa strzałów:")
+        print("Twoja mapa strzałów:\n")
         printBoard(enemy_board)
         
-        print("Twoja tura!")
+        print("Twoja tura!\n")
 
         correct_msg = False
         while not correct_msg:
-            msg = input("Podaj pole w które chcesz strzelić")
+            msg = input("Podaj pole w które chcesz strzelić: \n")
             i,j = get_idx(msg)
             if i == 0 or j == 0:
                 print("podano niepoprawne pole")
                 continue
             else:
-                print(f"Strzelono w pole o indexie [{i},{j}]")
+                print(f"Strzelono w pole o indexie [{i},{j}]\n")
                 correct_msg = True
             response = {
                 "type":"move",
@@ -190,7 +212,7 @@ while joined:
         i = shot_result[1]
         move_id = shot_result[2]
         enemy_board[j][i] = move_id
-        print("plansza przeciwnika: ")
+        print("Twoja mapa strzałów:\n ")
         printBoard(enemy_board)
 
         state = "idle"
