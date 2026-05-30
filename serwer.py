@@ -16,6 +16,8 @@ def discovery_server():
         data, addr = discovery_sock.recvfrom(1024)
         msg = data.decode()
 
+        print("Discovery dostało:", msg, "od", addr)
+
         if msg == "FIND_BATTLESHIP_SERVER":
             discovery_sock.sendto("BATTLESHIP_SERVER_HERE".encode(), addr)
 

@@ -35,7 +35,9 @@ server_addr = find_server()
 
 if server_addr is None:
     print("Nie znaleziono serwera")
-    exit()
+    manual_ip = input("Nie znaleziono serwera. Podaj IP serwera ręcznie: ").strip()
+    server_addr = (manual_ip, GAME_PORT)
+    
 
 print("Znaleziono serwer:", server_addr)
 
